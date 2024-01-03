@@ -23,12 +23,45 @@
  */
 package dev.renoux.enderrelay.load;
 
+import dev.renoux.enderrelay.blocks.EnderRelayBlock;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.MapColor;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
+import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
+
+import static dev.renoux.enderrelay.EnderRelay.metadata;
+
 public class ModRegistries {
 
+    static EnderRelayBlock ENDER_RELAY = new EnderRelayBlock(
+            QuiltBlockSettings.of()
+                    .strength(50.0F, 1200.0F)
+                    .mapColor(MapColor.COLOR_BLACK)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(blockState -> EnderRelayBlock.getScaledChargeLevel(blockState, 15)));
+
+    public static Item ENDER_RELAY_ITEM;
+    public static Block ENDER_RELAY_BLOCK;
     public static void init() {
+        initItems();
+        initBlocks();
+    }
+
+    public static void initItems() {
+        ENDER_RELAY_ITEM = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(metadata.id(), "ender"), new BlockItem(ENDER_RELAY, new QuiltItemSettings().stacksTo(64).fireResistant()));
+
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register((entries -> entries.addAfter(Items.RESPAWN_ANCHOR, ENDER_RELAY_ITEM)));
     }
 
     public static void initBlocks() {
-
+        ENDER_RELAY_BLOCK = Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(metadata.id(), "ender_relay"), ENDER_RELAY);
     }
 }
