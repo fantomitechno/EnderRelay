@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "charge=0": {
+      "model": "enderrelay:block/ender_relay_0"
+    },
+    "charge=1": {
+      "model": "enderrelay:block/ender_relay_1"
+    },
+    "charge=2": {
+      "model": "enderrelay:block/ender_relay_2"
+    }
+  }
+}
