@@ -102,6 +102,10 @@ public class EnderRelayBlock extends BaseEntityBlock {
                 if (isTeleportCompass(itemStack, world)) {
                     EnderRelayBlockEntity blentity = (EnderRelayBlockEntity) world.getBlockEntity(pos);
                     assert itemStack.getTag() != null;
+                    if (!itemStack.getTag().contains("LodestonePos")) {
+                        player.sendSystemMessage(Component.translatable("item.minecraft.lodestone_compass.nowhere"));
+                        return InteractionResult.PASS;
+                    }
                     BlockPos compassPos = NbtUtils.readBlockPos(itemStack.getTag().getCompound("LodestonePos"));
                     Component name = itemStack.getHoverName();
                     if (name.equals(Items.COMPASS.getName(itemStack))) {
