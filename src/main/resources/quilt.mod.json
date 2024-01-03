@@ -37,6 +37,7 @@
       }
     ]
   },
+  "access_widener": "enderrelay.accesswidener",
   "minecraft": {
     "environment": "*"
   }
