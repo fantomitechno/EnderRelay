@@ -37,7 +37,6 @@
       }
     ]
   },
-  "mixin": "enderrelay.mixins.json",
   "minecraft": {
     "environment": "*"
   }
