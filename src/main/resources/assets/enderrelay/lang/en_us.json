@@ -4,5 +4,6 @@
   "block.enderrelay.obstructed": "Your lodestone is obstructed or destroyed",
   "block.enderrelay.nowhere": "This Ender Relay is leading nowhere",
   "block.enderrelay.teleport_to": "This Ender Relay is teleporting you to %s",
-  "item.minecraft.lodestone_compass.nowhere": "This Lodestone Compass is leading nowhere"
+  "item.minecraft.lodestone_compass.nowhere": "This Lodestone Compass is leading nowhere",
+  "block.enderrelay.not_this_name_please": "A compass named \"null\" can broke the mod, please don't use that :/"
 }

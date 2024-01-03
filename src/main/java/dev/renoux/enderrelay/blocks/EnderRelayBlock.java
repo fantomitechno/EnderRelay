@@ -111,6 +111,11 @@ public class EnderRelayBlock extends BaseEntityBlock {
                     if (name.equals(Items.COMPASS.getName(itemStack))) {
                         name = Component.literal(compassPos.getX() + "/" + compassPos.getY() + "/" + compassPos.getZ());
                     }
+
+                    if (name.equals(Component.literal("null"))) {
+                        player.sendSystemMessage(Component.translatable("block.enderrelay.not_this_name_please"));
+                        return InteractionResult.CONSUME;
+                    }
                     player.sendSystemMessage(Component.translatable("block.enderrelay.set_teleport", name));
                     blentity.load(compassPos, name);
                     blentity.setChanged();
@@ -118,7 +123,7 @@ public class EnderRelayBlock extends BaseEntityBlock {
                     ServerPlayer serverPlayer = (ServerPlayer) player;
                     EnderRelayBlockEntity blentity = (EnderRelayBlockEntity) world.getBlockEntity(pos);
                     if (serverPlayer.isCrouching()) {
-                        if (blentity.getName() != null)
+                        if (blentity.getName().equals(Component.literal("null")))
                             serverPlayer.displayClientMessage(Component.translatable("block.enderrelay.teleport_to", blentity.getName()), true);
                         else
                             serverPlayer.displayClientMessage(Component.translatable("block.enderrelay.nowhere"), true);
