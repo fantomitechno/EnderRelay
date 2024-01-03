@@ -1,3 +1,4 @@
 {
-  "block.enderrelay.ender_relay": "Ender Relay"
+  "block.enderrelay.ender_relay": "Ender Relay",
+  "block.enderrelay.set_teleport": "Set teleport to %s"
 }

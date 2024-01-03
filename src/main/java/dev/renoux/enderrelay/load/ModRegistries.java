@@ -24,6 +24,7 @@
 package dev.renoux.enderrelay.load;
 
 import dev.renoux.enderrelay.blocks.EnderRelayBlock;
+import dev.renoux.enderrelay.blocks.entity.EnderRelayBlockEntity;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -33,8 +34,11 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
@@ -52,6 +56,7 @@ public class ModRegistries {
 
     public static Item ENDER_RELAY_ITEM;
     public static Block ENDER_RELAY_BLOCK;
+    public static BlockEntityType ENDER_RELAY_BLOCK_ENTITY;
     public static void init() {
         initItems();
         initBlocks();
@@ -65,5 +70,7 @@ public class ModRegistries {
 
     public static void initBlocks() {
         ENDER_RELAY_BLOCK = Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(metadata.id(), "ender_relay"), ENDER_RELAY);
+
+        ENDER_RELAY_BLOCK_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(metadata.id(), "ender_relay"), QuiltBlockEntityTypeBuilder.create(EnderRelayBlockEntity::new, ENDER_RELAY_BLOCK).build());
     }
 }

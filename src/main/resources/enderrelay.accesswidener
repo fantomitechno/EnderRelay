@@ -1,1 +1,2 @@
 accessWidener v2 named
+accessible method net/minecraft/world/item/CompassItem getLodestoneDimension (Lnet/minecraft/nbt/CompoundTag;)Ljava/util/Optional;
