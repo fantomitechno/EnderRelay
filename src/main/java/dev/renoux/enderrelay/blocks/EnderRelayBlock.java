@@ -1,11 +1,8 @@
 package dev.renoux.enderrelay.blocks;
 
-import com.google.common.collect.ImmutableList;
 import dev.renoux.enderrelay.blocks.entity.EnderRelayBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.GlobalPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -73,7 +70,7 @@ public class EnderRelayBlock extends BaseEntityBlock {
             return InteractionResult.PASS;
         } else if (!canTeleport(world)) {
             if (!world.isClientSide) {
-                this.explode(state, world, pos);
+                this.explode(world, pos);
             }
 
             return InteractionResult.sidedSuccess(world.isClientSide);
@@ -136,7 +133,7 @@ public class EnderRelayBlock extends BaseEntityBlock {
         }
     }
 
-    private void explode(BlockState blockState, Level level, BlockPos blockPos) {
+    private void explode(Level level, BlockPos blockPos) {
         level.removeBlock(blockPos, false);
         boolean bl = Direction.Plane.HORIZONTAL.stream().map(blockPos::relative).anyMatch(blockPosx -> isWaterThatWouldFlow(blockPosx, level));
         final boolean bl2 = bl || level.getFluidState(blockPos.above()).is(FluidTags.WATER);
@@ -151,7 +148,7 @@ public class EnderRelayBlock extends BaseEntityBlock {
             }
         };
         Vec3 vec3 = blockPos.getCenter();
-        level.explode(null, level.damageSources().badRespawnPointExplosion(vec3), explosionDamageCalculator, vec3, 5.0F, true, Level.ExplosionInteraction.BLOCK);
+        level.explode(null, level.damageSources().badRespawnPointExplosion(vec3), explosionDamageCalculator, vec3, 5.0F, false, Level.ExplosionInteraction.BLOCK);
     }
 
     public static void charge(@Nullable Entity entity, Level level, BlockPos blockPos, BlockState blockState) {
