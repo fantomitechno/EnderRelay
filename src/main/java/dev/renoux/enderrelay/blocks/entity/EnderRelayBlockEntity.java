@@ -81,7 +81,7 @@ public class EnderRelayBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
-        if (!this.name.equals(Component.literal("null"))) {
+        if (this.name != null || !this.name.equals(Component.literal("null"))) {
             compoundTag.put("teleportPlace", NbtUtils.writeBlockPos(this.teleportPlace));
             compoundTag.putString("name", Component.Serializer.toJson(this.name));
         }

@@ -125,7 +125,7 @@ public class EnderRelayBlock extends BaseEntityBlock {
                     if (blentity == null)
                         return InteractionResult.FAIL;
                     if (serverPlayer.isCrouching()) {
-                        if (blentity.getName() == null || !blentity.getName().equals(Component.literal("null")))
+                        if (blentity.getName() != null && !blentity.getName().equals(Component.literal("null")))
                             serverPlayer.displayClientMessage(Component.translatable("block.enderrelay.teleport_to", blentity.getName()), true);
                         else
                             serverPlayer.displayClientMessage(Component.translatable("block.enderrelay.nowhere"), true);
