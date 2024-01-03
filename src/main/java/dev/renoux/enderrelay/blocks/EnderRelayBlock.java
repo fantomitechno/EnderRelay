@@ -113,7 +113,10 @@ public class EnderRelayBlock extends BaseEntityBlock {
                 } else {
                     ServerPlayer serverPlayer = (ServerPlayer) player;
                     EnderRelayBlockEntity blentity = (EnderRelayBlockEntity) world.getBlockEntity(pos);
-                    EnderRelayBlockEntity.teleportPlayer(world, pos, state, serverPlayer, blentity);
+                    if (serverPlayer.isCrouching()) {
+                        serverPlayer.displayClientMessage(Component.translatable("block.enderrelay.teleport_to", blentity.getName()), true);
+                    } else
+                        EnderRelayBlockEntity.teleportPlayer(world, pos, state, serverPlayer, blentity);
                 }
             }
 

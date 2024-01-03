@@ -98,14 +98,14 @@ public class EnderRelayBlockEntity extends BlockEntity {
 
     public static void teleportPlayer(Level world, BlockPos pos, BlockState state, ServerPlayer player, EnderRelayBlockEntity blockEntity) {
         if (blockEntity.teleportPlace == null) {
-            player.sendSystemMessage(Component.translatable("block.enderrelay.nowhere", true));
+            player.displayClientMessage(Component.translatable("block.enderrelay.nowhere"), true);
             return;
         }
         BlockState blockState = world.getBlockState(blockEntity.teleportPlace);
         Block block = blockState.getBlock();
         Optional<Vec3> optional = EnderRelayBlockEntity.findStandUpPosition(EntityType.PLAYER, world, blockEntity.teleportPlace);
         if (!block.equals(Blocks.LODESTONE) || optional.isEmpty()) {
-            player.sendSystemMessage(Component.translatable("block.enderrelay.obstructed", true));
+            player.displayClientMessage(Component.translatable("block.enderrelay.obstructed"), true);
             return;
         }
         world.setBlock(pos, state.setValue(EnderRelayBlock.CHARGE, Integer.valueOf(state.getValue(EnderRelayBlock.CHARGE) - 1)), 3);
@@ -135,5 +135,9 @@ public class EnderRelayBlockEntity extends BlockEntity {
         }
 
         return Optional.empty();
+    }
+
+    public Component getName() {
+        return name;
     }
 }

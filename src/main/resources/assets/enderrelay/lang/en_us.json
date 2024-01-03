@@ -2,5 +2,6 @@
   "block.enderrelay.ender_relay": "Ender Relay",
   "block.enderrelay.set_teleport": "Set teleport to %s",
   "block.enderrelay.obstructed": "Your lodestone is obstructed or destroyed",
-  "block.enderrelay.nowhere": "This Ender Relay is leading nowhere"
+  "block.enderrelay.nowhere": "This Ender Relay is leading nowhere",
+  "block.enderrelay.teleport_to": "This Ender Relay is teleporting you to %s"
 }
