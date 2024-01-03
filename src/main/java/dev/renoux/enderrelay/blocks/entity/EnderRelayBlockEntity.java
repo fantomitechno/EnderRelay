@@ -77,6 +77,7 @@ public class EnderRelayBlockEntity extends BlockEntity {
     public static void teleportPlayer(Level world, BlockPos pos, BlockState state, ServerPlayer player, EnderRelayBlockEntity blockEntity) {
         if (blockEntity.teleportPlace == null) {
             player.sendSystemMessage(Component.translatable("block.enderrelay.nowhere", true));
+            return;
         }
         BlockState blockState = world.getBlockState(blockEntity.teleportPlace);
         Block block = blockState.getBlock();

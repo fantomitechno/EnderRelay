@@ -24,6 +24,7 @@
 
 package dev.renoux.enderrelay;
 
+import dev.renoux.enderrelay.load.DispenserBehavior;
 import dev.renoux.enderrelay.load.Events;
 import dev.renoux.enderrelay.load.ModRegistries;
 import net.minecraft.server.MinecraftServer;
@@ -49,6 +50,10 @@ public class EnderRelay implements ModInitializer {
     ModRegistries.init();
 
     LOGGER.info("{} : ModRegistries loaded", metadata.name());
+
+    DispenserBehavior.init();
+
+    LOGGER.info("{} : DispenserBehavior loaded", metadata.name());
 
     Events.register();
 
