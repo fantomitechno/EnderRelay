@@ -1,17 +1,24 @@
 package dev.renoux.enderrelay.blocks.entity;
 
 import com.google.common.collect.ImmutableList;
+import dev.renoux.enderrelay.blocks.EnderRelayBlock;
 import dev.renoux.enderrelay.load.ModRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.level.CollisionGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -68,7 +75,24 @@ public class EnderRelayBlockEntity extends BlockEntity {
     }
 
     public static void teleportPlayer(Level world, BlockPos pos, BlockState state, ServerPlayer player, EnderRelayBlockEntity blockEntity) {
-
+        if (blockEntity.teleportPlace == null) {
+            player.sendSystemMessage(Component.translatable("block.enderrelay.nowhere", true));
+        }
+        BlockState blockState = world.getBlockState(blockEntity.teleportPlace);
+        Block block = blockState.getBlock();
+        Optional<Vec3> optional = EnderRelayBlockEntity.findStandUpPosition(EntityType.PLAYER, world, blockEntity.teleportPlace);
+        if (!block.equals(Blocks.LODESTONE) || optional.isEmpty()) {
+            player.sendSystemMessage(Component.translatable("block.enderrelay.obstructed", true));
+            return;
+        }
+        world.setBlock(pos, state.setValue(EnderRelayBlock.CHARGE, Integer.valueOf(state.getValue(EnderRelayBlock.CHARGE) - 1)), 3);
+        player.connection.send(new ClientboundSoundPacket(SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F, world.getRandom().nextLong()));
+        if (world.getBlockState(pos).getValue(EnderRelayBlock.CHARGE) == 0) {
+            blockEntity.teleportPlace = null;
+            blockEntity.name = null;
+        }
+        Vec3 coords = optional.get();
+        player.teleportTo(coords.x, coords.y, coords.z);
     }
 
     public static Optional<Vec3> findStandUpPosition(EntityType<?> entityType, CollisionGetter collisionGetter, BlockPos blockPos) {

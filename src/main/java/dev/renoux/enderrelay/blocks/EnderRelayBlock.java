@@ -77,23 +77,24 @@ public class EnderRelayBlock extends BaseEntityBlock {
             }
 
             return InteractionResult.sidedSuccess(world.isClientSide);
-        } else if (isTeleportCompass(itemStack, world)) {
-            EnderRelayBlockEntity blentity = (EnderRelayBlockEntity) world.getBlockEntity(pos);
-            assert itemStack.getTag() != null;
-            BlockPos compassPos = NbtUtils.readBlockPos(itemStack.getTag().getCompound("LodestonePos"));
-            Component name = itemStack.getDisplayName();
-            if (itemStack.getDisplayName().equals(Items.COMPASS.getName(itemStack))) {
-                name = Component.literal(compassPos.getX() + "/" + compassPos.getY() + "/" + compassPos.getZ());
-            }
-            player.sendSystemMessage(Component.translatable("block.enderrelay.set_teleport", name));
-            blentity.load(compassPos, name);
-            blentity.setChanged();
-            return InteractionResult.sidedSuccess(world.isClientSide);
         } else {
             if (!world.isClientSide) {
-                ServerPlayer serverPlayer = (ServerPlayer)player;
-                EnderRelayBlockEntity blentity = (EnderRelayBlockEntity) world.getBlockEntity(pos);
-
+                if (isTeleportCompass(itemStack, world)) {
+                    EnderRelayBlockEntity blentity = (EnderRelayBlockEntity) world.getBlockEntity(pos);
+                    assert itemStack.getTag() != null;
+                    BlockPos compassPos = NbtUtils.readBlockPos(itemStack.getTag().getCompound("LodestonePos"));
+                    Component name = itemStack.getHoverName();
+                    if (name.equals(Items.COMPASS.getName(itemStack))) {
+                        name = Component.literal(compassPos.getX() + "/" + compassPos.getY() + "/" + compassPos.getZ());
+                    }
+                    player.sendSystemMessage(Component.translatable("block.enderrelay.set_teleport", name));
+                    blentity.load(compassPos, name);
+                    blentity.setChanged();
+                } else {
+                    ServerPlayer serverPlayer = (ServerPlayer) player;
+                    EnderRelayBlockEntity blentity = (EnderRelayBlockEntity) world.getBlockEntity(pos);
+                    EnderRelayBlockEntity.teleportPlayer(world, pos, state, serverPlayer, blentity);
+                }
             }
 
             return InteractionResult.CONSUME;
