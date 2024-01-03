@@ -34,6 +34,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
@@ -46,7 +47,8 @@ public class ModRegistries {
                     .strength(50.0F, 1200.0F)
                     .mapColor(MapColor.COLOR_BLACK)
                     .requiresCorrectToolForDrops()
-                    .lightLevel(blockState -> EnderRelayBlock.getScaledChargeLevel(blockState, 15)));
+                    .lightLevel(blockState -> EnderRelayBlock.getScaledChargeLevel(blockState, 15))
+                    .pushReaction(PushReaction.IGNORE));
 
     public static Item ENDER_RELAY_ITEM;
     public static Block ENDER_RELAY_BLOCK;
@@ -56,7 +58,7 @@ public class ModRegistries {
     }
 
     public static void initItems() {
-        ENDER_RELAY_ITEM = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(metadata.id(), "ender"), new BlockItem(ENDER_RELAY, new QuiltItemSettings().stacksTo(64).fireResistant()));
+        ENDER_RELAY_ITEM = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(metadata.id(), "ender_relay"), new BlockItem(ENDER_RELAY, new QuiltItemSettings().stacksTo(64).fireResistant()));
 
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register((entries -> entries.addAfter(Items.RESPAWN_ANCHOR, ENDER_RELAY_ITEM)));
     }
