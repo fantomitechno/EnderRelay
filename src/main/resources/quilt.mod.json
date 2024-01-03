@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "dev.renoux",
+    "id": "enderrelay",
+    "version": "${version}",
+    "metadata": {
+      "name": "Ender Relay",
+      "description": "I relay from the end",
+      "icon": {
+        "16": "assets/enderrelay/icon.png"
+      },
+      "contributors": {
+        "Simon - fantomitechno (aka Simon R)": "uwu"
+      },
+      "contact": {
+        "sources": "https://github.com/fantomitechno/EnderRelay",
+        "issues": "https://github.com/fantomitechno/EnderRelay/issues"
+      }
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": "dev.renoux.enderrelay.EnderRelay"
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.19.1"
+      },
+      {
+        "id": "quilted_fabric_api",
+        "versions": ">=7.0.2"
+      },
+      {
+        "id": "minecraft",
+        "versions": ">=1.20"
+      }
+    ]
+  },
+  "mixin": "enderrelay.mixins.json",
+  "minecraft": {
+    "environment": "*"
+  }
+}
