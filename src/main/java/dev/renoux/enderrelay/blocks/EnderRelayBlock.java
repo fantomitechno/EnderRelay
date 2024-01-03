@@ -109,7 +109,7 @@ public class EnderRelayBlock extends BaseEntityBlock {
                     BlockPos compassPos = NbtUtils.readBlockPos(itemStack.getTag().getCompound("LodestonePos"));
                     Component name = itemStack.getHoverName();
                     if (name.equals(Items.COMPASS.getName(itemStack))) {
-                        name = Component.literal(compassPos.getX() + "/" + compassPos.getY() + "/" + compassPos.getZ());
+                        name = Component.literal(compassPos.getX() + " / " + compassPos.getY() + " / " + compassPos.getZ());
                     }
 
                     if (name.equals(Component.literal("null"))) {
