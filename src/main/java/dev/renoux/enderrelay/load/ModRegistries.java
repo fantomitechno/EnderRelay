@@ -34,6 +34,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.MapColor;
@@ -47,16 +48,13 @@ import static dev.renoux.enderrelay.EnderRelay.metadata;
 public class ModRegistries {
 
     static EnderRelayBlock ENDER_RELAY = new EnderRelayBlock(
-            QuiltBlockSettings.of()
-                    .strength(50.0F, 1200.0F)
-                    .mapColor(MapColor.COLOR_BLACK)
-                    .requiresCorrectToolForDrops()
+            QuiltBlockSettings.copyOf(Blocks.RESPAWN_ANCHOR)
                     .lightLevel(blockState -> EnderRelayBlock.getScaledChargeLevel(blockState, 15))
                     .pushReaction(PushReaction.IGNORE));
 
     public static Item ENDER_RELAY_ITEM;
     public static Block ENDER_RELAY_BLOCK;
-    public static BlockEntityType ENDER_RELAY_BLOCK_ENTITY;
+    public static BlockEntityType<EnderRelayBlockEntity> ENDER_RELAY_BLOCK_ENTITY;
     public static void init() {
         initItems();
         initBlocks();

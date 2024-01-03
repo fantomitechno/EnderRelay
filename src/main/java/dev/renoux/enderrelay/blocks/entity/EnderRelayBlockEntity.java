@@ -81,7 +81,7 @@ public class EnderRelayBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
-        if (this.name != null || !this.name.equals(Component.literal("null"))) {
+        if (this.name != null && !this.name.equals(Component.literal("null"))) {
             compoundTag.put("teleportPlace", NbtUtils.writeBlockPos(this.teleportPlace));
             compoundTag.putString("name", Component.Serializer.toJson(this.name));
         }
@@ -99,7 +99,7 @@ public class EnderRelayBlockEntity extends BlockEntity {
     }
 
     public static void teleportPlayer(Level world, BlockPos pos, BlockState state, ServerPlayer player, EnderRelayBlockEntity blockEntity) {
-        if (blockEntity.name.equals(Component.literal("null"))) {
+        if (blockEntity.name == null || blockEntity.name.equals(Component.literal("null"))) {
             player.displayClientMessage(Component.translatable("block.enderrelay.nowhere"), true);
             return;
         }
