@@ -46,6 +46,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class EnderRelayBlockEntity extends BlockEntity {
@@ -79,7 +80,7 @@ public class EnderRelayBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
-        if (this.teleportPlace != null) {
+        if (!this.teleportPlace.equals(new BlockPos(0, 0, 0))) {
             compoundTag.put("teleportPlace", NbtUtils.writeBlockPos(this.teleportPlace));
             compoundTag.putString("name", Component.Serializer.toJson(this.name));
         }
@@ -97,7 +98,7 @@ public class EnderRelayBlockEntity extends BlockEntity {
     }
 
     public static void teleportPlayer(Level world, BlockPos pos, BlockState state, ServerPlayer player, EnderRelayBlockEntity blockEntity) {
-        if (blockEntity.teleportPlace == null) {
+        if (blockEntity.teleportPlace.equals(new BlockPos(0, 0, 0))) {
             player.displayClientMessage(Component.translatable("block.enderrelay.nowhere"), true);
             return;
         }
@@ -109,11 +110,11 @@ public class EnderRelayBlockEntity extends BlockEntity {
             return;
         }
         world.setBlock(pos, state.setValue(EnderRelayBlock.CHARGE, Integer.valueOf(state.getValue(EnderRelayBlock.CHARGE) - 1)), 3);
-        player.connection.send(new ClientboundSoundPacket(SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F, world.getRandom().nextLong()));
         if (world.getBlockState(pos).getValue(EnderRelayBlock.CHARGE) == 0) {
-            blockEntity.teleportPlace = null;
+            blockEntity.teleportPlace = new BlockPos(0, 0, 0);
             blockEntity.name = null;
         }
+        player.connection.send(new ClientboundSoundPacket(SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F, world.getRandom().nextLong()));
         Vec3 coords = optional.get();
         player.teleportTo(coords.x, coords.y, coords.z);
     }
