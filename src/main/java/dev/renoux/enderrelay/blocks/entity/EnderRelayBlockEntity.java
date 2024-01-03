@@ -35,6 +35,7 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.level.CollisionGetter;
@@ -111,12 +112,16 @@ public class EnderRelayBlockEntity extends BlockEntity {
         }
         world.setBlock(pos, state.setValue(EnderRelayBlock.CHARGE, Integer.valueOf(state.getValue(EnderRelayBlock.CHARGE) - 1)), 3);
         if (world.getBlockState(pos).getValue(EnderRelayBlock.CHARGE) == 0) {
-            blockEntity.teleportPlace = new BlockPos(0, 0, 0);
-            blockEntity.name = null;
+            reset(blockEntity);
         }
         player.connection.send(new ClientboundSoundPacket(SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F, world.getRandom().nextLong()));
         Vec3 coords = optional.get();
-        player.teleportTo(coords.x, coords.y, coords.z);
+        player.moveTo(coords.x, coords.y, coords.z, 0.0f, 0.0f);
+
+        while(!world.noCollision(player) && player.getY() < (double)world.getMaxBuildHeight()) {
+            player.setPos(player.getX(), player.getY() + 1.0, player.getZ());
+        }
+        player.connection.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
     }
 
     public static Optional<Vec3> findStandUpPosition(EntityType<?> entityType, CollisionGetter collisionGetter, BlockPos blockPos) {
@@ -136,6 +141,11 @@ public class EnderRelayBlockEntity extends BlockEntity {
         }
 
         return Optional.empty();
+    }
+
+    public static void reset(EnderRelayBlockEntity blockEntity) {
+        blockEntity.teleportPlace = new BlockPos(0, 0, 0);
+        blockEntity.name = Component.literal("null");
     }
 
     public Component getName() {
