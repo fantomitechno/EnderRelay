@@ -46,7 +46,7 @@ public class DispenserBehavior {
                 BlockState blockState = level.getBlockState(blockPos);
                 this.setSuccess(true);
                 if (blockState.is(ModRegistries.ENDER_RELAY_BLOCK)) {
-                    if (blockState.getValue(EnderRelayBlock.CHARGE) != 4) {
+                    if (blockState.getValue(EnderRelayBlock.CHARGE) != EnderRelayBlock.MAX_CHARGES) {
                         EnderRelayBlock.charge(null, level, blockPos, blockState);
                         itemStack.shrink(1);
                     } else {
