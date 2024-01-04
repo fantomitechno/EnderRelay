@@ -37,7 +37,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.CollisionGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -47,7 +50,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public class EnderRelayBlockEntity extends BlockEntity {
@@ -98,6 +100,26 @@ public class EnderRelayBlockEntity extends BlockEntity {
         this.name = name;
     }
 
+    public static void loadCoordinate(ItemStack itemStack, Player player, EnderRelayBlockEntity blentity) {
+        if (!itemStack.getTag().contains("LodestonePos")) {
+            player.sendSystemMessage(Component.translatable("item.minecraft.lodestone_compass.nowhere"));
+            return;
+        }
+        BlockPos compassPos = NbtUtils.readBlockPos(itemStack.getTag().getCompound("LodestonePos"));
+        Component name = itemStack.getHoverName();
+        if (name.equals(Items.COMPASS.getName(itemStack))) {
+            name = Component.literal(compassPos.getX() + " / " + compassPos.getY() + " / " + compassPos.getZ());
+        }
+
+        if (name.equals(Component.literal("null"))) {
+            player.sendSystemMessage(Component.translatable("block.enderrelay.not_this_name_please"));
+            return;
+        }
+        player.sendSystemMessage(Component.translatable("block.enderrelay.set_teleport", name));
+        blentity.load(compassPos, name);
+        blentity.setChanged();
+    }
+
     public static void teleportPlayer(Level world, BlockPos pos, BlockState state, ServerPlayer player, EnderRelayBlockEntity blockEntity) {
         if (blockEntity.name == null || blockEntity.name.equals(Component.literal("null"))) {
             player.displayClientMessage(Component.translatable("block.enderrelay.nowhere"), true);
@@ -112,13 +134,14 @@ public class EnderRelayBlockEntity extends BlockEntity {
         }
         world.setBlock(pos, state.setValue(EnderRelayBlock.CHARGE, Integer.valueOf(state.getValue(EnderRelayBlock.CHARGE) - 1)), 3);
         if (world.getBlockState(pos).getValue(EnderRelayBlock.CHARGE) == 0) {
-            reset(blockEntity);
+            blockEntity.teleportPlace = new BlockPos(0, 0, 0);
+            blockEntity.name = Component.literal("null");
         }
-        player.connection.send(new ClientboundSoundPacket(SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F, world.getRandom().nextLong()));
         Vec3 coords = optional.get();
+        player.connection.send(new ClientboundSoundPacket(SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F, world.getRandom().nextLong()));
         player.moveTo(coords.x, coords.y, coords.z, 0.0f, 0.0f);
 
-        while(!world.noCollision(player) && player.getY() < (double)world.getMaxBuildHeight()) {
+        while (!world.noCollision(player) && player.getY() < (double) world.getMaxBuildHeight()) {
             player.setPos(player.getX(), player.getY() + 1.0, player.getZ());
         }
         player.connection.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
@@ -141,11 +164,6 @@ public class EnderRelayBlockEntity extends BlockEntity {
         }
 
         return Optional.empty();
-    }
-
-    public static void reset(EnderRelayBlockEntity blockEntity) {
-        blockEntity.teleportPlace = new BlockPos(0, 0, 0);
-        blockEntity.name = Component.literal("null");
     }
 
     public Component getName() {

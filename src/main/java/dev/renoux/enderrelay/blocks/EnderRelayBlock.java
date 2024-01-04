@@ -87,7 +87,6 @@ public class EnderRelayBlock extends BaseEntityBlock {
             if (!player.getAbilities().instabuild) {
                 itemStack.shrink(1);
             }
-
             return InteractionResult.sidedSuccess(world.isClientSide);
         } else if (state.getValue(CHARGE) == 0) {
             return InteractionResult.PASS;
@@ -99,29 +98,11 @@ public class EnderRelayBlock extends BaseEntityBlock {
             return InteractionResult.sidedSuccess(world.isClientSide);
         } else {
             if (!world.isClientSide) {
+                EnderRelayBlockEntity blentity = (EnderRelayBlockEntity) world.getBlockEntity(pos);
                 if (isTeleportCompass(itemStack, world)) {
-                    EnderRelayBlockEntity blentity = (EnderRelayBlockEntity) world.getBlockEntity(pos);
-                    assert itemStack.getTag() != null;
-                    if (!itemStack.getTag().contains("LodestonePos")) {
-                        player.sendSystemMessage(Component.translatable("item.minecraft.lodestone_compass.nowhere"));
-                        return InteractionResult.PASS;
-                    }
-                    BlockPos compassPos = NbtUtils.readBlockPos(itemStack.getTag().getCompound("LodestonePos"));
-                    Component name = itemStack.getHoverName();
-                    if (name.equals(Items.COMPASS.getName(itemStack))) {
-                        name = Component.literal(compassPos.getX() + " / " + compassPos.getY() + " / " + compassPos.getZ());
-                    }
-
-                    if (name.equals(Component.literal("null"))) {
-                        player.sendSystemMessage(Component.translatable("block.enderrelay.not_this_name_please"));
-                        return InteractionResult.CONSUME;
-                    }
-                    player.sendSystemMessage(Component.translatable("block.enderrelay.set_teleport", name));
-                    blentity.load(compassPos, name);
-                    blentity.setChanged();
+                    EnderRelayBlockEntity.loadCoordinate(itemStack, player, blentity);
                 } else {
                     ServerPlayer serverPlayer = (ServerPlayer) player;
-                    EnderRelayBlockEntity blentity = (EnderRelayBlockEntity) world.getBlockEntity(pos);
                     if (blentity == null)
                         return InteractionResult.FAIL;
                     if (serverPlayer.isCrouching()) {
@@ -133,7 +114,6 @@ public class EnderRelayBlock extends BaseEntityBlock {
                         EnderRelayBlockEntity.teleportPlayer(world, pos, state, serverPlayer, blentity);
                 }
             }
-
             return InteractionResult.CONSUME;
         }
     }
