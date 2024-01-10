@@ -2,6 +2,8 @@
 [![quilt](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/quilt_vector.svg)](https://quiltmc.org/)
 [![quilted-fabric-api](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/quilted-fabric-api_vector.svg)](https://modrinth.com/mod/qsl)
 
+[![modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/enderrelay)
+
 Original concept and textures by [Kenadian](https://youtube.com/@Kenadian) ([video of her presenting this concept](https://youtu.be/L1i4izl25V4))
 
 The Ender Relay is a new block to finalize the trilogy of the Intentional Game Design: Bed, Respawn Block and, now, Ender Relay
